@@ -14,6 +14,13 @@ class RecurrentExpenseResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'description' => $this->description,
+            'default_value' => $this->default_value,
+            'limit_value' => $this->limit_value,
+            'due_day' => $this->due_day,
+            'status' => $this->status,
+        ];
     }
 }

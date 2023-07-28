@@ -4,63 +4,77 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRecurrentIncomeRequest;
 use App\Http\Requests\UpdateRecurrentIncomeRequest;
+use App\Http\Resources\RecurrentIncomeResource;
 use App\Models\RecurrentIncome;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class RecurrentIncomeController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @return JsonResource
      */
-    public function index()
+    public function index(): JsonResource
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return RecurrentIncomeResource::collection(RecurrentIncome::all());
     }
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @param StoreRecurrentIncomeRequest $request
+     * @return JsonResponse
      */
-    public function store(StoreRecurrentIncomeRequest $request)
+    public function store(StoreRecurrentIncomeRequest $request): JsonResponse
     {
-        //
+        $validated = $request->validated();
+
+        $recurrentIncome = RecurrentIncome::create($validated);
+
+        return response()->json($recurrentIncome);
     }
 
     /**
      * Display the specified resource.
+     *
+     * @param RecurrentIncome $recurrentIncome
+     * @return RecurrentIncomeResource
      */
-    public function show(RecurrentIncome $recurrentIncome)
+    public function show(RecurrentIncome $recurrentIncome): JsonResource
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(RecurrentIncome $recurrentIncome)
-    {
-        //
+        return new RecurrentIncomeResource($recurrentIncome);
     }
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param UpdateRecurrentIncomeRequest $request
+     * @param RecurrentIncome $recurrentIncome
+     * @return JsonResponse
      */
-    public function update(UpdateRecurrentIncomeRequest $request, RecurrentIncome $recurrentIncome)
+    public function update(UpdateRecurrentIncomeRequest $request, RecurrentIncome $recurrentIncome): JsonResponse
     {
-        //
+        $validated = $request->validated();
+
+        $recurrentIncome->update($validated);
+
+        return response()->json($recurrentIncome);
     }
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @param RecurrentIncome $recurrentIncome
+     * @return JsonResponse
      */
-    public function destroy(RecurrentIncome $recurrentIncome)
+    public function destroy(RecurrentIncome $recurrentIncome): JsonResponse
     {
-        //
+        $recurrentIncome->delete();
+
+        return response()->json([
+            'message' => 'Record deleted.'
+        ]);
     }
 }

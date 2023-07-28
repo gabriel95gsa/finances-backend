@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('recurrent_expenses', function (Blueprint $table) {
             $table->id();
-            $table->string('description');
+            $table->string('description', 255);
             $table->double('default_value', 9, 2);
             $table->double('limit_value', 9, 2)->nullable();
             $table->integer('due_day')->nullable();
