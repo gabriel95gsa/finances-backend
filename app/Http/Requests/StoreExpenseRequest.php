@@ -11,7 +11,7 @@ class StoreExpenseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class StoreExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'description' => '',
+            'recurrent_expense_id' => '',
+            'value' => '',
+            'period_date' => '',
+            'due_day' => '',
         ];
     }
 }
