@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('period_date', 7);
             $table->integer('due_day')->nullable();
             $table->timestamps();
+
+            $table->foreign('recurrent_expense_id')->references('id')->on('recurrent_expenses');
         });
     }
 
@@ -27,9 +29,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('expenses', function (Blueprint $table) {
-            $table->dropForeign('expenses_recurrent_expense_id_foreign');
-        });
+//        Schema::table('expenses', function (Blueprint $table) {
+//            $table->dropForeign('expenses_recurrent_expense_id_foreign');
+//        });
 
         Schema::dropIfExists('expenses');
     }
