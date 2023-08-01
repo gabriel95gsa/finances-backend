@@ -27,7 +27,7 @@ class IncomeController extends Controller
     {
         $validated = $request->validated();
 
-        if (array_key_exists('recurrent_income_id', $validated) && $validated['recurrent_income_id']) {
+        if ($request->safe()->has('recurrent_income_id') && $validated['recurrent_income_id']) {
             $recurrentIncome = RecurrentIncome::where('id', $validated['recurrent_income_id'])->first();
 
             $validated['description'] = $recurrentIncome->description;
@@ -53,7 +53,7 @@ class IncomeController extends Controller
     public function update(UpdateIncomeRequest $request, Income $income): JsonResponse
     {
         // Assuring the recurrent income won`t be altered
-        $validated = $request->safe()->only(['description', 'value', 'period_date']);
+        $validated = $request->safe()->except(['recurrent_income_id']);
 
         $income->update($validated);
 
@@ -67,8 +67,6 @@ class IncomeController extends Controller
     {
         $income->delete();
 
-        return response()->json([
-            'message' => 'Record deleted.'
-        ]);
+        return response()->json(['message' => 'Record deleted.']);
     }
 }

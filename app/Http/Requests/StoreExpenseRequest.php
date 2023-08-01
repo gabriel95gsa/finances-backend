@@ -2,10 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Traits\ValidationErrorResponseTrait;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreExpenseRequest extends FormRequest
 {
+    use ValidationErrorResponseTrait;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -22,11 +26,20 @@ class StoreExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'description' => '',
-            'recurrent_expense_id' => '',
-            'value' => '',
-            'period_date' => '',
-            'due_day' => '',
+            'description' => 'required_without:recurrent_expense_id|exclude_with:recurrent_expense_id|string|min:3|max:255',
+            'recurrent_expense_id' => 'nullable|exists:recurrent_expenses,id',
+            'value' => 'required_without:recurrent_expense_id|exclude_with:recurrent_expense_id|decimal:0,2',
+            'period_date' => 'required|date_format:Y-m',
+            'due_day' => 'required_without:recurrent_expense_id|exclude_with:recurrent_expense_id|integer|between:1,31',
         ];
+    }
+
+    /**
+     * @param Validator $validator
+     * @return void
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        $this->validationErrors($validator);
     }
 }

@@ -10,4 +10,9 @@ class Expense extends Model
     use HasFactory;
 
     protected $fillable = ['description', 'recurrent_expense_id', 'value', 'period_date', 'due_day'];
+
+    public function recurrentExpense()
+    {
+        return $this->belongsTo(RecurrentExpense::class);
+    }
 }

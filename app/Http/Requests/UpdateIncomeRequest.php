@@ -28,7 +28,7 @@ class UpdateIncomeRequest extends FormRequest
         return [
             'description' => 'sometimes|string|min:3|max:255',
             'recurrent_income_id' => 'prohibited|exclude',
-            'value' => 'sometimes|exclude_with:recurrent_income_id|decimal:0,2',
+            'value' => 'sometimes|decimal:0,2',
             'period_date' => 'sometimes|date_format:Y-m',
         ];
     }
