@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -26,6 +27,15 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->renderable(function (AccessDeniedHttpException $e, $request) {
+            if ($request->is('api/app/*')) {
+                return response()->json([
+                    'message' =>
+                        'This action is unauthorized. User does not have permission to manage this resource.'
+                ], 403);
+            }
         });
 
         $this->renderable(function (NotFoundHttpException $e, $request) {

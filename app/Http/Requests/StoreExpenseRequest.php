@@ -26,11 +26,12 @@ class StoreExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'user_id' => 'required|exists:users,id',
             'description' => 'required_without:recurrent_expense_id|exclude_with:recurrent_expense_id|string|min:3|max:255',
-            'recurrent_expense_id' => 'nullable|exists:recurrent_expenses,id',
+            'recurrent_expense_id' => 'nullable|prohibits:description,value,due_day|exists:recurrent_expenses,id',
             'value' => 'required_without:recurrent_expense_id|exclude_with:recurrent_expense_id|decimal:0,2',
             'period_date' => 'required|date_format:Y-m',
-            'due_day' => 'required_without:recurrent_expense_id|exclude_with:recurrent_expense_id|integer|between:1,31',
+            'due_day' => 'sometimes|exclude_with:recurrent_expense_id|integer|between:1,31',
         ];
     }
 
@@ -41,5 +42,14 @@ class StoreExpenseRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         $this->validationErrors($validator);
+    }
+
+    /**
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        // Always add auth user id to the form request automatically
+        $this->merge(['user_id' => auth()->user()->id]);
     }
 }

@@ -9,6 +9,7 @@ use App\Models\Expense;
 use App\Models\RecurrentExpense;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Gate;
 
 class ExpenseController extends Controller
 {
@@ -19,7 +20,9 @@ class ExpenseController extends Controller
      */
     public function index(): JsonResource
     {
-        return ExpenseResource::collection(Expense::with('recurrentExpense')->get());
+        $expenses = Expense::where('user_id', auth()->user()->id)->get();
+
+        return ExpenseResource::collection($expenses->load('recurrentExpense'));
     }
 
     /**
@@ -53,6 +56,8 @@ class ExpenseController extends Controller
      */
     public function show(Expense $expense): JsonResource
     {
+        $this->authorize('view', $expense);
+
         return new ExpenseResource($expense->load('recurrentExpense'));
     }
 
@@ -65,6 +70,8 @@ class ExpenseController extends Controller
      */
     public function update(UpdateExpenseRequest $request, Expense $expense): JsonResponse
     {
+        $this->authorize('update', $expense);
+
         // Assuring the recurrent expense won`t be altered
         $validated = $request->safe()->except(['recurrent_expense_id']);
 
@@ -81,6 +88,8 @@ class ExpenseController extends Controller
      */
     public function destroy(Expense $expense): JsonResponse
     {
+        $this->authorize('delete', $expense);
+
         $expense->delete();
 
         return response()->json(['message' => 'Record deleted.']);

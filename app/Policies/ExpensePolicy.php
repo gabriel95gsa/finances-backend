@@ -21,7 +21,7 @@ class ExpensePolicy
      */
     public function view(User $user, Expense $expense): bool
     {
-        //
+        return $user->id === $expense->user_id;
     }
 
     /**
@@ -37,7 +37,7 @@ class ExpensePolicy
      */
     public function update(User $user, Expense $expense): bool
     {
-        //
+        return $user->id === $expense->user_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class ExpensePolicy
      */
     public function delete(User $user, Expense $expense): bool
     {
-        //
+        return $user->id === $expense->user_id;
     }
 
     /**
@@ -53,7 +53,7 @@ class ExpensePolicy
      */
     public function restore(User $user, Expense $expense): bool
     {
-        //
+        return $user->id === $expense->user_id;
     }
 
     /**
@@ -61,6 +61,6 @@ class ExpensePolicy
      */
     public function forceDelete(User $user, Expense $expense): bool
     {
-        //
+        return $user->id === $expense->user_id;
     }
 }

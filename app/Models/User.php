@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -12,7 +13,7 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -68,8 +69,48 @@ class User extends Authenticatable implements JWTSubject
     /**
      * @return HasMany
      */
+    public function expenses(): HasMany
+    {
+        return $this->hasMany(Expense::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function expensesCategories(): HasMany
+    {
+        return $this->hasMany(ExpensesCategory::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function incomes(): HasMany
+    {
+        return $this->hasMany(Income::class);
+    }
+
+    /**
+     * @return HasMany
+     */
     public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function recurrentExpenses(): HasMany
+    {
+        return $this->hasMany(RecurrentExpense::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function recurrentIncomes(): HasMany
+    {
+        return $this->hasMany(RecurrentIncome::class);
     }
 }

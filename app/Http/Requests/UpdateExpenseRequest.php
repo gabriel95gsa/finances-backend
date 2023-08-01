@@ -26,9 +26,10 @@ class UpdateExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'user_id' => 'prohibited|exclude',
             'description' => 'sometimes|string|min:3|max:255',
             'recurrent_expense_id' => 'prohibited|exclude',
-            'value' => 'sometimes||decimal:0,2',
+            'value' => 'sometimes|decimal:0,2',
             'period_date' => 'sometimes|date_format:Y-m',
             'due_day' => 'sometimes|integer|between:1,31',
         ];
