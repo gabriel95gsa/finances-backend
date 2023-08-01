@@ -14,6 +14,12 @@ class IncomeResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'description' => $this->description,
+            'recurrent_income' => new RecurrentIncomeResource($this->whenLoaded('recurrentIncome')),
+            'value' => $this->value,
+            'period_date' => $this->period_date,
+        ];
     }
 }
