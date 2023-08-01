@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->text('content');
             $table->boolean('read');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -24,6 +27,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('notifications', function (Blueprint $table) {
+            $table->dropForeign('notifications_user_id_foreign');
+        });
+
         Schema::dropIfExists('notifications');
     }
 };

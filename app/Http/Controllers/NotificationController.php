@@ -4,24 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreNotificationRequest;
 use App\Http\Requests\UpdateNotificationRequest;
+use App\Http\Resources\NotificationResource;
 use App\Models\Notification;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class NotificationController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @return JsonResource
      */
-    public function index()
+    public function index(): JsonResource
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return NotificationResource::collection(Notification::where('user_id', auth()->user()->id)->get());
     }
 
     /**
@@ -34,26 +31,27 @@ class NotificationController extends Controller
 
     /**
      * Display the specified resource.
+     *
+     * @param Notification $notification
+     * @return JsonResource
      */
-    public function show(Notification $notification)
+    public function show(Notification $notification): JsonResource
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Notification $notification)
-    {
-        //
+        return new NotificationResource($notification);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateNotificationRequest $request, Notification $notification)
+    public function update(UpdateNotificationRequest $request, Notification $notification): JsonResponse
     {
-        //
+        $validated = $request->safe()->only(['read']);
+
+        $notification->update($validated);
+
+        return response()->json([
+            'message' => 'Notification updated.'
+        ]);
     }
 
     /**
