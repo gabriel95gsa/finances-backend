@@ -21,7 +21,7 @@ class RecurrentIncomePolicy
      */
     public function view(User $user, RecurrentIncome $recurrentIncome): bool
     {
-        //
+        return $user->id === $recurrentIncome->user_id;
     }
 
     /**
@@ -37,7 +37,7 @@ class RecurrentIncomePolicy
      */
     public function update(User $user, RecurrentIncome $recurrentIncome): bool
     {
-        //
+        return $user->id === $recurrentIncome->user_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class RecurrentIncomePolicy
      */
     public function delete(User $user, RecurrentIncome $recurrentIncome): bool
     {
-        //
+        return $user->id === $recurrentIncome->user_id;
     }
 
     /**
@@ -53,7 +53,7 @@ class RecurrentIncomePolicy
      */
     public function restore(User $user, RecurrentIncome $recurrentIncome): bool
     {
-        //
+        return $user->id === $recurrentIncome->user_id;
     }
 
     /**
@@ -61,6 +61,6 @@ class RecurrentIncomePolicy
      */
     public function forceDelete(User $user, RecurrentIncome $recurrentIncome): bool
     {
-        //
+        return $user->id === $recurrentIncome->user_id;
     }
 }

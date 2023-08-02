@@ -18,7 +18,9 @@ class RecurrentIncomeController extends Controller
      */
     public function index(): JsonResource
     {
-        return RecurrentIncomeResource::collection(RecurrentIncome::all());
+        $recurrentIncomes = RecurrentIncome::where('user_id', auth()->user()->id)->get();
+
+        return RecurrentIncomeResource::collection($recurrentIncomes);
     }
 
     /**
@@ -44,6 +46,8 @@ class RecurrentIncomeController extends Controller
      */
     public function show(RecurrentIncome $recurrentIncome): JsonResource
     {
+        $this->authorize('view', $recurrentIncome);
+
         return new RecurrentIncomeResource($recurrentIncome);
     }
 
@@ -56,6 +60,8 @@ class RecurrentIncomeController extends Controller
      */
     public function update(UpdateRecurrentIncomeRequest $request, RecurrentIncome $recurrentIncome): JsonResponse
     {
+        $this->authorize('update', $recurrentIncome);
+
         $validated = $request->validated();
 
         $recurrentIncome->update($validated);
@@ -71,6 +77,8 @@ class RecurrentIncomeController extends Controller
      */
     public function destroy(RecurrentIncome $recurrentIncome): JsonResponse
     {
+        $this->authorize('delete', $recurrentIncome);
+
         $recurrentIncome->delete();
 
         return response()->json([
