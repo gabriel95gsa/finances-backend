@@ -21,7 +21,7 @@ class ExpensesCategoryPolicy
      */
     public function view(User $user, ExpensesCategory $expensesCategory): bool
     {
-        //
+        return $user->id === $expensesCategory->user_id;
     }
 
     /**
@@ -37,7 +37,7 @@ class ExpensesCategoryPolicy
      */
     public function update(User $user, ExpensesCategory $expensesCategory): bool
     {
-        //
+        return $user->id === $expensesCategory->user_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class ExpensesCategoryPolicy
      */
     public function delete(User $user, ExpensesCategory $expensesCategory): bool
     {
-        //
+        return $user->id === $expensesCategory->user_id;
     }
 
     /**
@@ -53,7 +53,7 @@ class ExpensesCategoryPolicy
      */
     public function restore(User $user, ExpensesCategory $expensesCategory): bool
     {
-        //
+        return $user->id === $expensesCategory->user_id;
     }
 
     /**
@@ -61,6 +61,6 @@ class ExpensesCategoryPolicy
      */
     public function forceDelete(User $user, ExpensesCategory $expensesCategory): bool
     {
-        //
+        return $user->id === $expensesCategory->user_id;
     }
 }

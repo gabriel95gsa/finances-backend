@@ -12,7 +12,7 @@ class ExpensesCategory extends Model
 
     protected $table = 'expenses_categories';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['user_id', 'name'];
 
     /**
      * @return BelongsTo

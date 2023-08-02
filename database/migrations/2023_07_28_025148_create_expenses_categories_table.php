@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('expenses_categories', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->string('name', 255);
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -23,6 +26,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('expenses_categories', function (Blueprint $table) {
+            $table->dropForeign('expenses_categories_user_id_foreign');
+        });
+
         Schema::dropIfExists('expenses_categories');
     }
 };

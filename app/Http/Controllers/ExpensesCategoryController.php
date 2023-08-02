@@ -18,7 +18,9 @@ class ExpensesCategoryController extends Controller
      */
     public function index(): JsonResource
     {
-        return ExpensesCategoryResource::collection(ExpensesCategory::all());
+        $expensesCategories = ExpensesCategory::where('user_id', auth()->user()->id)->get();
+
+        return ExpensesCategoryResource::collection($expensesCategories);
     }
 
     /**
@@ -44,6 +46,8 @@ class ExpensesCategoryController extends Controller
      */
     public function show(ExpensesCategory $expensesCategory): JsonResource
     {
+        $this->authorize('view', $expensesCategory);
+
         return new ExpensesCategoryResource($expensesCategory);
     }
 
@@ -56,6 +60,8 @@ class ExpensesCategoryController extends Controller
      */
     public function update(UpdateExpensesCategoryRequest $request, ExpensesCategory $expensesCategory): JsonResponse
     {
+        $this->authorize('update', $expensesCategory);
+
         $validated = $request->validated();
 
         $expensesCategory->update($validated);
@@ -71,6 +77,8 @@ class ExpensesCategoryController extends Controller
      */
     public function destroy(ExpensesCategory $expensesCategory): JsonResponse
     {
+        $this->authorize('delete', $expensesCategory);
+
         $expensesCategory->delete();
 
         return response()->json([
