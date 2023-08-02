@@ -21,7 +21,7 @@ class RecurrentExpensePolicy
      */
     public function view(User $user, RecurrentExpense $recurrentExpense): bool
     {
-        //
+        return $user->id === $recurrentExpense->user_id;
     }
 
     /**
@@ -37,7 +37,7 @@ class RecurrentExpensePolicy
      */
     public function update(User $user, RecurrentExpense $recurrentExpense): bool
     {
-        //
+        return $user->id === $recurrentExpense->user_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class RecurrentExpensePolicy
      */
     public function delete(User $user, RecurrentExpense $recurrentExpense): bool
     {
-        //
+        return $user->id === $recurrentExpense->user_id;
     }
 
     /**
@@ -53,7 +53,7 @@ class RecurrentExpensePolicy
      */
     public function restore(User $user, RecurrentExpense $recurrentExpense): bool
     {
-        //
+        return $user->id === $recurrentExpense->user_id;
     }
 
     /**
@@ -61,6 +61,6 @@ class RecurrentExpensePolicy
      */
     public function forceDelete(User $user, RecurrentExpense $recurrentExpense): bool
     {
-        //
+        return $user->id === $recurrentExpense->user_id;
     }
 }

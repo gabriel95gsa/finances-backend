@@ -18,7 +18,9 @@ class RecurrentExpenseController extends Controller
      */
     public function index(): JsonResource
     {
-        return RecurrentExpenseResource::collection(RecurrentExpense::all());
+        $recurrentExpenses = RecurrentExpense::where('user_id', auth()->user()->id)->get();
+
+        return RecurrentExpenseResource::collection($recurrentExpenses);
     }
 
     /**
@@ -44,6 +46,8 @@ class RecurrentExpenseController extends Controller
      */
     public function show(RecurrentExpense $recurrentExpense): JsonResource
     {
+        $this->authorize('view', $recurrentExpense);
+
         return new RecurrentExpenseResource($recurrentExpense);
     }
 
@@ -56,6 +60,8 @@ class RecurrentExpenseController extends Controller
      */
     public function update(UpdateRecurrentExpenseRequest $request, RecurrentExpense $recurrentExpense): JsonResponse
     {
+        $this->authorize('update', $recurrentExpense);
+
         $validated = $request->validated();
 
         $recurrentExpense->update($validated);
@@ -71,6 +77,8 @@ class RecurrentExpenseController extends Controller
      */
     public function destroy(RecurrentExpense $recurrentExpense): JsonResponse
     {
+        $this->authorize('delete', $recurrentExpense);
+
         $recurrentExpense->delete();
 
         return response()->json([

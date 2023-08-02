@@ -26,6 +26,7 @@ class StoreRecurrentExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'user_id' => 'required|exists:users,id',
             'description' => 'required|string|min:3|max:255',
             'default_value' => 'required|decimal:0,2',
             'limit_value' => 'decimal:0,2',
@@ -41,5 +42,14 @@ class StoreRecurrentExpenseRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         $this->validationErrors($validator);
+    }
+
+    /**
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        // Always add auth user id to the form request automatically
+        $this->merge(['user_id' => auth()->user()->id]);
     }
 }
