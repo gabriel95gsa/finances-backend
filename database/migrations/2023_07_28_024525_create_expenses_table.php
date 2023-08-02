@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->string('description', 255);
             $table->unsignedBigInteger('recurrent_expense_id')->nullable();
-            $table->double('default_value', 9,2)->default(0);
+            $table->double('value', 9,2)->default(0);
             $table->string('period_date', 7);
             $table->integer('due_day')->nullable();
             $table->timestamps();
 
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('recurrent_expense_id')->references('id')->on('recurrent_expenses');
         });
     }
@@ -30,6 +32,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('expenses', function (Blueprint $table) {
+            $table->dropForeign('expenses_user_id_foreign');
             $table->dropForeign('expenses_recurrent_expense_id_foreign');
         });
 
