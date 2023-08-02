@@ -17,7 +17,9 @@ class IncomeController extends Controller
      */
     public function index(): JsonResource
     {
-        return IncomeResource::collection(Income::with('recurrentIncome')->get());
+        $incomes = Income::where('user_id', auth()->user()->id)->get();
+
+        return IncomeResource::collection($incomes->load('recurrentIncome'));
     }
 
     /**
@@ -44,6 +46,8 @@ class IncomeController extends Controller
      */
     public function show(Income $income): JsonResource
     {
+        $this->authorize('view', $income);
+
         return new IncomeResource($income->load('recurrentIncome'));
     }
 
@@ -52,6 +56,8 @@ class IncomeController extends Controller
      */
     public function update(UpdateIncomeRequest $request, Income $income): JsonResponse
     {
+        $this->authorize('update', $income);
+
         // Assuring the recurrent income won`t be altered
         $validated = $request->safe()->except(['recurrent_income_id']);
 
@@ -65,6 +71,8 @@ class IncomeController extends Controller
      */
     public function destroy(Income $income): JsonResponse
     {
+        $this->authorize('delete', $income);
+
         $income->delete();
 
         return response()->json(['message' => 'Record deleted.']);

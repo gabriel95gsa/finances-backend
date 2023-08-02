@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('incomes', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->string('description', 255);
             $table->unsignedBigInteger('recurrent_income_id')->nullable();
             $table->double('value', 9,2)->default(0);
             $table->string('period_date', 7);
             $table->timestamps();
 
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('recurrent_income_id')->references('id')->on('recurrent_incomes');
         });
     }
@@ -29,6 +31,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('incomes', function (Blueprint $table) {
+            $table->dropForeign('incomes_user_id_foreign');
             $table->dropForeign('incomes_recurrent_income_id_foreign');
         });
 

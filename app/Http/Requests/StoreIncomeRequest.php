@@ -26,6 +26,7 @@ class StoreIncomeRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'user_id' => 'required|exists:users,id',
             'description' => 'required_without:recurrent_income_id|exclude_with:recurrent_income_id|string|min:3|max:255',
             'recurrent_income_id' => 'nullable|exists:recurrent_incomes,id',
             'value' => 'required_without:recurrent_income_id|exclude_with:recurrent_income_id|decimal:0,2',
@@ -40,5 +41,14 @@ class StoreIncomeRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         $this->validationErrors($validator);
+    }
+
+    /**
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        // Always add auth user id to the form request automatically
+        $this->merge(['user_id' => auth()->user()->id]);
     }
 }
