@@ -37,6 +37,8 @@ class NotificationController extends Controller
      */
     public function show(Notification $notification): JsonResource
     {
+        $this->authorize('view', $notification);
+
         return new NotificationResource($notification);
     }
 
@@ -45,6 +47,8 @@ class NotificationController extends Controller
      */
     public function update(UpdateNotificationRequest $request, Notification $notification): JsonResponse
     {
+        $this->authorize('update', $notification);
+
         $validated = $request->safe()->only(['read']);
 
         $notification->update($validated);
