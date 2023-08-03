@@ -26,6 +26,7 @@ class UpdateRecurrentExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'expenses_category_id' => 'sometimes|nullable|exists:expenses_categories,id',
             'description' => 'sometimes|string|min:3|max:255',
             'default_value' => 'sometimes|decimal:0,2',
             'limit_value' => 'sometimes|decimal:0,2',

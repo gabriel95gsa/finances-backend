@@ -10,7 +10,15 @@ class RecurrentExpense extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'description', 'default_value', 'limit_value', 'due_day', 'status'];
+    protected $fillable = ['user_id', 'expenses_category_id', 'description', 'default_value', 'limit_value', 'due_day', 'status'];
+
+    /**
+     * @return BelongsTo
+     */
+    public function expensesCategory(): BelongsTo
+    {
+        return $this->belongsTo(ExpensesCategory::class);
+    }
 
     /**
      * @return BelongsTo

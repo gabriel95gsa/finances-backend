@@ -22,7 +22,7 @@ class ExpenseController extends Controller
     {
         $expenses = Expense::where('user_id', auth()->user()->id)->get();
 
-        return ExpenseResource::collection($expenses->load('recurrentExpense'));
+        return ExpenseResource::collection($expenses->load(['expensesCategory', 'recurrentExpense']));
     }
 
     /**
@@ -38,6 +38,7 @@ class ExpenseController extends Controller
         if ($request->safe()->has('recurrent_expense_id') && $validated['recurrent_expense_id']) {
             $recurrentIncome = RecurrentExpense::where('id', $validated['recurrent_expense_id'])->first();
 
+            $validated['expenses_category_id'] = $recurrentIncome->expenses_category_id;
             $validated['description'] = $recurrentIncome->description;
             $validated['value'] = $recurrentIncome->default_value;
             $validated['due_day'] = $recurrentIncome->due_day;
@@ -58,7 +59,7 @@ class ExpenseController extends Controller
     {
         $this->authorize('view', $expense);
 
-        return new ExpenseResource($expense->load('recurrentExpense'));
+        return new ExpenseResource($expense->load(['expensesCategory', 'recurrentExpense']));
     }
 
     /**

@@ -10,7 +10,15 @@ class Expense extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'description', 'recurrent_expense_id', 'value', 'period_date', 'due_day'];
+    protected $fillable = ['user_id', 'expenses_category_id', 'description', 'recurrent_expense_id', 'value', 'period_date', 'due_day'];
+
+    /**
+     * @return BelongsTo
+     */
+    public function expensesCategory(): BelongsTo
+    {
+        return $this->belongsTo(ExpensesCategory::class);
+    }
 
     /**
      * @return BelongsTo

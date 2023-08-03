@@ -27,6 +27,7 @@ class StoreRecurrentExpenseRequest extends FormRequest
     {
         return [
             'user_id' => 'required|exists:users,id',
+            'expenses_category_id' => 'sometimes|nullable|exists:expenses_categories,id',
             'description' => 'required|string|min:3|max:255',
             'default_value' => 'required|decimal:0,2',
             'limit_value' => 'decimal:0,2',

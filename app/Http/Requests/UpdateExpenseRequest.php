@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Traits\ValidationErrorResponseTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Closure;
 
 class UpdateExpenseRequest extends FormRequest
 {
@@ -27,6 +28,16 @@ class UpdateExpenseRequest extends FormRequest
     {
         return [
             'user_id' => 'prohibited|exclude',
+            'expenses_category_id' => [
+                'sometimes',
+                'nullable',
+                'exists:expenses_categories,id',
+                function (string $attribute, mixed $value, Closure $fail) {
+                    if ($this->expense->recurrent_expense_id) {
+                        $fail('Expense category can`t be updated when the expense is current.');
+                    }
+                }
+            ],
             'description' => 'sometimes|string|min:3|max:255',
             'recurrent_expense_id' => 'prohibited|exclude',
             'value' => 'sometimes|decimal:0,2',
@@ -45,7 +56,7 @@ class UpdateExpenseRequest extends FormRequest
             if (isset($this->period_date) && $this->expense->recurrentExpense !== null) {
                 $validator->errors()->add(
                     'period_date',
-                    'Period date not allowed to be updated if the expense is recurrent.'
+                    'Period date not allowed to be updated when the expense is recurrent.'
                 );
             }
 

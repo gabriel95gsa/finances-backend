@@ -20,7 +20,7 @@ class RecurrentExpenseController extends Controller
     {
         $recurrentExpenses = RecurrentExpense::where('user_id', auth()->user()->id)->get();
 
-        return RecurrentExpenseResource::collection($recurrentExpenses);
+        return RecurrentExpenseResource::collection($recurrentExpenses->load('expensesCategory'));
     }
 
     /**

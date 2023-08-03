@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('recurrent_expenses', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('expenses_category_id')->nullable();
             $table->string('description', 255);
             $table->double('default_value', 9, 2);
             $table->double('limit_value', 9, 2)->nullable();
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('expenses_category_id')->references('id')->on('expenses_categories');
         });
     }
 
@@ -32,6 +34,7 @@ return new class extends Migration
     {
         Schema::table('recurrent_expenses', function (Blueprint $table) {
             $table->dropForeign('recurrent_expenses_user_id_foreign');
+            $table->dropForeign('recurrent_expenses_expenses_category_id_foreign');
         });
 
         Schema::dropIfExists('recurrent_expenses');

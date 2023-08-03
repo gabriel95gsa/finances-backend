@@ -16,6 +16,7 @@ class ExpenseResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'expenses_category' => new ExpensesCategoryResource($this->whenLoaded('expensesCategory')),
             'description' => $this->description,
             'recurrent_expense' => new RecurrentExpenseResource($this->whenLoaded('recurrentExpense')),
             'value' => $this->value,
