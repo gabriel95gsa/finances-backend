@@ -18,6 +18,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+/**
+ * Auth Routes
+ */
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
@@ -29,8 +32,35 @@ Route::group([
     Route::post('me', [\App\Http\Controllers\Auth\AuthController::class, 'me']);
 });
 
+/**
+ * Verification Routes
+ */
 Route::group([
-    'middleware' => 'auth.api',
+    'middleware' => 'api',
+    'prefix' => 'verification'
+], function () {
+    Route::get('/email/verify', [\App\Http\Controllers\Auth\VerificationController::class, 'notice'])
+        ->name('verification.notice');
+
+    Route::get('/email/verify/{id}/{hash}', [\App\Http\Controllers\Auth\VerificationController::class, 'verify'])
+        ->middleware(['signed'])
+        ->name('verification.verify')
+        ->missing(function () {
+            return response()->json([
+                'message' => 'Resource not found'
+            ], 404);
+        });
+
+    Route::post('/email/resend', [\App\Http\Controllers\Auth\VerificationController::class, 'resend'])
+        ->middleware('auth.api')
+        ->name('verification.send');
+});
+
+/**
+ * App Routes
+ */
+Route::group([
+    'middleware' => ['auth.api', 'verified'],
     'prefix' => 'app'
 ], function () {
     Route::resource('/expenses', \App\Http\Controllers\ExpenseController::class);
