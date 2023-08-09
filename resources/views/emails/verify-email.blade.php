@@ -3,7 +3,7 @@
 
 The body of your message.
 
-<x-mail::button :url="'https://google.com'">
+<x-mail::button :url="''">
 Verify E-mail
 </x-mail::button>
 
