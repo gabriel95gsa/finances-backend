@@ -6,6 +6,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\TokenInvalidException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -30,13 +31,6 @@ class Handler extends ExceptionHandler
             //
         });
 
-        $this->renderable(function (TokenInvalidException $e, $request) {
-            return response()->json([
-                'message' =>
-                    'Could not decode token. Token invalid.'
-            ], 500);
-        });
-
         $this->renderable(function (AccessDeniedHttpException $e, $request) {
             if ($request->is('api/app/*')) {
                 return response()->json([
@@ -46,12 +40,27 @@ class Handler extends ExceptionHandler
             }
         });
 
+//        $this->renderable(function (HttpException $e, $request) {
+//            if ($request->is('api/app/*')) {
+//                return response()->json([
+//                    'message' => $e->getMessage()
+//                ], 403);
+//            }
+//        });
+
         $this->renderable(function (NotFoundHttpException $e, $request) {
             if ($request->is('api/app/*')) {
                 return response()->json([
                     'message' => 'Resource not found.'
                 ], 404);
             }
+        });
+
+        $this->renderable(function (TokenInvalidException $e, $request) {
+            return response()->json([
+                'message' =>
+                    'Could not decode token. Token invalid.'
+            ], 500);
         });
     }
 }

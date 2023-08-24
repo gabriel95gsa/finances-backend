@@ -9,6 +9,7 @@ use App\Models\Expense;
 use App\Models\RecurrentExpense;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
 class ExpenseController extends Controller
@@ -46,7 +47,7 @@ class ExpenseController extends Controller
 
         $expense = Expense::create($validated);
 
-        return response()->json($expense);
+        return response()->json($expense, Response::HTTP_CREATED);
     }
 
     /**
