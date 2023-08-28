@@ -3,9 +3,7 @@
 namespace Tests;
 
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Illuminate\Support\Facades\Hash;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -21,23 +19,16 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-//        $this->seed();
-
         $this->apiUri = 'api/app/';
 
-//        $this->user = $this->createUser([
-//            'name' => 'Test User 1',
-//            'email' => 'testuser1@testing.com',
-//            'password' => Hash::make('1234'),
-//        ]);
-//
-//        $this->user->email_verified_at = Carbon::now();
-//        $this->user->save();
+        $this->user = User::where('email', 'testuser1@example.com')->first();
 
-        $authorizationToken = $this->postJson('api/auth/login', [
-            'email' => $this->user->email,
-            'password' => '1234',
-        ])->json('access_token');
+        $this->authorizationToken = 'bearer ' . $this->postJson('api/auth/login', [
+                'email' => $this->user->email,
+                'password' => '1234',
+            ])->json('access_token');
+
+        $this->withHeader('Authorization', $this->authorizationToken);
     }
 
     protected function createUser(array $attributes): User

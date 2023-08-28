@@ -1,4 +1,5 @@
 ## **USERS**
+
 - name
 - email
 - password
@@ -7,6 +8,7 @@
 - softdeletes
 
 ## INCOMES
+
 - description
 - recurrent_income_id
 - value
@@ -14,6 +16,7 @@
 - timestamps
 
 ## EXPENSES
+
 - description
 - recurrent_expense_id
 - expenses_category_id
@@ -23,12 +26,14 @@
 - timestamps
 
 ## RECURRENT_INCOMES
+
 - description
 - default_value
 - status
 - timestamps
 
 ## RECURRENT_EXPENSES
+
 - description
 - expenses_category_id
 - default_value
@@ -38,14 +43,18 @@
 - timestamps
 
 ## EXPENSES_CATEGORIES
+
 - name
 - timestamps
 
 ## NOTIFICATIONS
+
 - user_id
 - content
 - read
 - timestamps
 
 ## CHECK HOW TO IMPLEMENT UUID IN THE MODELS AND TABLES
-## IMPLMENT ALL FEAT TESTS
+## IMPLMENT ALL FEAT TESTS (EXPENSE, EXPENSESCATEGORY, INCOME, NOTIFICATION, RECURRENTEXPENSE, RECURRENTINCOME)
+
+## CHECK WHY PROHIBITS DOES NOT WORK WHEN ONLY DESCRIPTION FIELD IS SENT ALONGSIDE RECURRENT_EXPENSE_ID (StoreExpenseRequest)
