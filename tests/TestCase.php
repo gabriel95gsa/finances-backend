@@ -3,17 +3,25 @@
 namespace Tests;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication;
+    use CreatesApplication, RefreshDatabase;
+
+    /**
+     * Indicates whether the default seeder should run before each test.
+     *
+     * @var bool
+     */
+    protected bool $seed = true;
 
     protected string $apiUri;
 
     protected string $authorizationToken;
 
-    protected User $user;
+    protected User $user, $user2;
 
     protected function setUp(): void
     {
@@ -22,6 +30,8 @@ abstract class TestCase extends BaseTestCase
         $this->apiUri = 'api/app/';
 
         $this->user = User::where('email', 'testuser1@example.com')->first();
+
+        $this->user2 = User::where('email', 'testuser2@example.com')->first();
 
         $this->authorizationToken = 'bearer ' . $this->postJson('api/auth/login', [
                 'email' => $this->user->email,
@@ -61,8 +71,6 @@ abstract class TestCase extends BaseTestCase
     public abstract function test_update_resource_return_403_status_on_access_forbidden(): void;
 
     public abstract function test_delete_resource_return_200_status(): void;
-
-    public abstract function test_delete_resource_return_422_status_on_incorrect_request_field(): void;
 
     public abstract function test_delete_resource_return_404_status_on_nonexistent_resource_id(): void;
 
