@@ -8,6 +8,7 @@ use App\Http\Resources\RecurrentExpenseResource;
 use App\Models\RecurrentExpense;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 
 class RecurrentExpenseController extends Controller
 {
@@ -35,7 +36,7 @@ class RecurrentExpenseController extends Controller
 
         $recurrentExpense = RecurrentExpense::create($validated);
 
-        return response()->json($recurrentExpense);
+        return response()->json($recurrentExpense, Response::HTTP_CREATED);
     }
 
     /**

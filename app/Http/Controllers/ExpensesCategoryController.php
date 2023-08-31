@@ -8,6 +8,7 @@ use App\Http\Resources\ExpensesCategoryResource;
 use App\Models\ExpensesCategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 
 class ExpensesCategoryController extends Controller
 {
@@ -35,7 +36,7 @@ class ExpensesCategoryController extends Controller
 
         $expenseCategory = ExpensesCategory::create($validated);
 
-        return response()->json($expenseCategory);
+        return response()->json($expenseCategory, Response::HTTP_CREATED);
     }
 
     /**

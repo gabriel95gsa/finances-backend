@@ -8,6 +8,7 @@ use App\Http\Resources\RecurrentIncomeResource;
 use App\Models\RecurrentIncome;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 
 class RecurrentIncomeController extends Controller
 {
@@ -35,7 +36,7 @@ class RecurrentIncomeController extends Controller
 
         $recurrentIncome = RecurrentIncome::create($validated);
 
-        return response()->json($recurrentIncome);
+        return response()->json($recurrentIncome, Response::HTTP_CREATED);
     }
 
     /**
