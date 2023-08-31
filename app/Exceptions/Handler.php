@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Response;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\TokenInvalidException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -36,7 +37,7 @@ class Handler extends ExceptionHandler
                 return response()->json([
                     'message' =>
                         'This action is unauthorized. User does not have permission to manage this resource.'
-                ], 403);
+                ], Response::HTTP_FORBIDDEN);
             }
         });
 
@@ -52,7 +53,7 @@ class Handler extends ExceptionHandler
             if ($request->is('api/app/*')) {
                 return response()->json([
                     'message' => 'Resource not found.'
-                ], 404);
+                ], Response::HTTP_NOT_FOUND);
             }
         });
 
@@ -60,7 +61,7 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'message' =>
                     'Could not decode token. Token invalid.'
-            ], 500);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         });
     }
 }
