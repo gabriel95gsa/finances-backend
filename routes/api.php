@@ -63,10 +63,14 @@ Route::group([
     'middleware' => ['auth.api', 'verified'],
     'prefix' => 'app'
 ], function () {
-    Route::resource('/expenses', \App\Http\Controllers\ExpenseController::class);
-    Route::resource('/expenses-categories', \App\Http\Controllers\ExpensesCategoryController::class);
-    Route::resource('/incomes', \App\Http\Controllers\IncomeController::class);
-    Route::resource('/notifications', \App\Http\Controllers\NotificationController::class);
-    Route::resource('/recurrent-expenses', \App\Http\Controllers\RecurrentExpenseController::class);
-    Route::resource('/recurrent-incomes', \App\Http\Controllers\RecurrentIncomeController::class);
+    Route::get('expenses/list/{period?}', [\App\Http\Controllers\ExpenseController::class, 'listAllExpensesByPeriod'])
+        ->name('expenses.listAllByPeriod');
+
+    Route::apiResources([
+        'expenses' => \App\Http\Controllers\ExpenseController::class,
+        'expenses-categories' => \App\Http\Controllers\ExpensesCategoryController::class,
+        'incomes' => \App\Http\Controllers\IncomeController::class,
+        'recurrent-expenses' => \App\Http\Controllers\RecurrentExpenseController::class,
+        'recurrent-incomes' => \App\Http\Controllers\RecurrentIncomeController::class,
+    ]);
 });

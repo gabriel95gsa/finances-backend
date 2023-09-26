@@ -7,9 +7,12 @@ use App\Http\Requests\UpdateExpenseRequest;
 use App\Http\Resources\ExpenseResource;
 use App\Models\Expense;
 use App\Models\RecurrentExpense;
+use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class ExpenseController extends Controller
@@ -37,12 +40,12 @@ class ExpenseController extends Controller
         $validated = $request->validated();
 
         if ($request->safe()->has('recurrent_expense_id') && $validated['recurrent_expense_id']) {
-            $recurrentIncome = RecurrentExpense::where('id', $validated['recurrent_expense_id'])->first();
+            $recurrentExpense = RecurrentExpense::where('id', $validated['recurrent_expense_id'])->first();
 
-            $validated['expenses_category_id'] = $recurrentIncome->expenses_category_id;
-            $validated['description'] = $recurrentIncome->description;
-            $validated['value'] = $recurrentIncome->default_value;
-            $validated['due_day'] = $recurrentIncome->due_day;
+            $validated['expenses_category_id'] = $recurrentExpense->expenses_category_id;
+            $validated['description'] = $recurrentExpense->description;
+            $validated['value'] = $validated['value'] ?? $recurrentExpense->default_value;
+            $validated['due_day'] = $recurrentExpense->due_day;
         }
 
         $expense = Expense::create($validated);
@@ -95,5 +98,63 @@ class ExpenseController extends Controller
         $expense->delete();
 
         return response()->json(['message' => 'Record deleted.']);
+    }
+
+    /**
+     * List all expenses (joining expenses and recurrent_expenses) by period (ex.: 2023-05)
+     *
+     * @param string|null $period
+     * @return JsonResponse
+     */
+    public function listAllExpensesByPeriod(?string $period = null): JsonResponse
+    {
+        $currentMonth = $period ?? Carbon::now()->format('Y-m');
+        $userId = auth()->user()->id;
+
+        /*
+         * For this query, only rows from recurrent_expenses table
+         * will have recurrent_expense_id value and
+         * only rows from expenses table will have expense_id value
+         */
+        $expensesQuery = DB::table('expenses')
+            ->select(
+                DB::raw("id as expense_id"),
+                'description',
+                'value', 'period_date',
+                'due_day',
+                'expenses_category_id',
+                DB::raw("NULL as recurrent_expense_id"),
+            )
+            ->where('user_id', $userId)
+            ->where('period_date', $currentMonth);
+
+        $expenses = DB::table('recurrent_expenses')
+            ->select(
+                DB::raw("NULL as expense_id"),
+                'description',
+                'default_value as value',
+                DB::raw("$currentMonth as period_date"),
+                'due_day',
+                'expenses_category_id',
+                DB::raw("id as recurrent_expense_id"),
+            )
+            ->where('user_id', $userId)
+            ->where('status', 1)
+            ->where(
+                'created_at',
+                '<=',
+                Carbon::createFromFormat('Y-m-d', "{$currentMonth}-01")->endOfMonth()
+            )
+            ->whereNotIn('id', function (Builder $query) use ($currentMonth, $userId) {
+                $query->select('recurrent_expense_id')
+                    ->from('expenses')
+                    ->where('expenses.user_id', $userId)
+                    ->where('expenses.period_date', $currentMonth)
+                    ->whereNotNull('recurrent_expense_id');
+            })
+            ->union($expensesQuery)
+            ->get();
+
+        return response()->json($expenses);
     }
 }

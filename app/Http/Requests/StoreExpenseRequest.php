@@ -29,8 +29,8 @@ class StoreExpenseRequest extends FormRequest
             'user_id' => 'required|exists:users,id',
             'expenses_category_id' => 'sometimes|nullable|exclude_with:recurrent_expense_id|exists:expenses_categories,id',
             'description' => 'required_without:recurrent_expense_id|exclude_with:recurrent_expense_id|string|min:3|max:255',
-            'recurrent_expense_id' => 'nullable|prohibits:expenses_category_id,description,value,due_day|exists:recurrent_expenses,id',
-            'value' => 'required_without:recurrent_expense_id|exclude_with:recurrent_expense_id|decimal:0,2',
+            'recurrent_expense_id' => 'nullable|prohibits:expenses_category_id,description,due_day|exists:recurrent_expenses,id',
+            'value' => 'required_without:recurrent_expense_id|decimal:0,2',
             'period_date' => 'required|date_format:Y-m',
             'due_day' => 'sometimes|exclude_with:recurrent_expense_id|integer|between:1,31',
         ];

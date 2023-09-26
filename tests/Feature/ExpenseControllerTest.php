@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Expense;
 use App\Models\ExpensesCategory;
 use App\Models\RecurrentExpense;
+use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Tests\TestCase;
 
@@ -62,6 +63,13 @@ class ExpenseControllerTest extends TestCase
     public function test_get_all_resources_return_200_status(): void
     {
         $this->getJson($this->apiUri)->assertStatus(Response::HTTP_OK);
+    }
+
+    public function test_get_all_resources_by_period_return_200_status(): void
+    {
+        $this->getJson($this->apiUri . '/list')->assertStatus(Response::HTTP_OK);
+
+        $this->getJson($this->apiUri . '/list/' . Carbon::now()->format('Y-m'))->assertStatus(Response::HTTP_OK);
     }
 
     public function test_create_resource_return_201_status(): void
