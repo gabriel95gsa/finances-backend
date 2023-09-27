@@ -120,7 +120,8 @@ class ExpenseController extends Controller
             ->select(
                 DB::raw("id as expense_id"),
                 'description',
-                'value', 'period_date',
+                'value',
+                'period_date',
                 'due_day',
                 'expenses_category_id',
                 DB::raw("NULL as recurrent_expense_id"),
@@ -146,7 +147,8 @@ class ExpenseController extends Controller
                 Carbon::createFromFormat('Y-m-d', "{$currentMonth}-01")->endOfMonth()
             )
             ->whereNotIn('id', function (Builder $query) use ($currentMonth, $userId) {
-                $query->select('recurrent_expense_id')
+                $query
+                    ->select('recurrent_expense_id')
                     ->from('expenses')
                     ->where('expenses.user_id', $userId)
                     ->where('expenses.period_date', $currentMonth)

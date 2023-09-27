@@ -28,8 +28,8 @@ class StoreIncomeRequest extends FormRequest
         return [
             'user_id' => 'required|exists:users,id',
             'description' => 'required_without:recurrent_income_id|exclude_with:recurrent_income_id|string|min:3|max:255',
-            'recurrent_income_id' => 'nullable|exists:recurrent_incomes,id',
-            'value' => 'required_without:recurrent_income_id|exclude_with:recurrent_income_id|decimal:0,2',
+            'recurrent_income_id' => 'nullable|prohibits:description|exists:recurrent_incomes,id',
+            'value' => 'required_without:recurrent_income_id|decimal:0,2',
             'period_date' => 'required|date_format:Y-m',
         ];
     }

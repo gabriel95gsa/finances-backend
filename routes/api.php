@@ -65,6 +65,8 @@ Route::group([
 ], function () {
     Route::get('expenses/list/{period?}', [\App\Http\Controllers\ExpenseController::class, 'listAllExpensesByPeriod'])
         ->name('expenses.listAllByPeriod');
+    Route::get('incomes/list/{period?}', [\App\Http\Controllers\IncomeController::class, 'listAllIncomesByPeriod'])
+        ->name('incomes.listAllByPeriod');
 
     Route::apiResources([
         'expenses' => \App\Http\Controllers\ExpenseController::class,
